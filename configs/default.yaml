@@ -1,0 +1,62 @@
+# -*- Data Configs -*- 
+dataset: UserBehavior
+dataset_path: /data/datasets/UserBehavior/
+dataset_ext: csv
+dense_fields: []
+sparse_fields: ["user_id:token", "item_id:token", "category:token"]
+label_fields: ["click:label", "buy:label", "cart:label", "favourite:label"]
+task_types:
+  ["classification", "classification", "classification", "classification"]
+num_workers: 8
+
+# -*- Result Configs -*- 
+result_path: ./results      # contains log, ckpt, config.yaml files
+save_interval: 300          # model save interval (per epoch)
+log_name: ~                 # if not ~: use for log file's name
+tag: ~                      # mark a log (append to log name)
+log_level: info
+log_interval: 100           # log print interval (per batch)
+log_parameter: False        # save the parameter as histogram or not
+
+# -*- Device Configs -*-
+device_ids: 0
+n_gpu: 1
+seed: 666
+deterministic: True
+
+# -*- Model Configs -*- 
+resume: False
+resume_path: ~
+clip_grad_norm: 5.0
+val_per_epoch: 1
+epoch: 2
+test_epoch: 2
+batch_size: 1024
+
+earlystop_patience: 10
+# abstract params
+embedding_dim: 64
+criterions: [bce, bce, bce, bce]
+val_metrics: [auc, auc, auc, auc]
+model:
+  name: AITM
+  kwargs:
+    dropout: 0.2
+    bottom_layers: [512, 256]
+    tower_layers: [128, 64]
+
+# -*- Optim Configs -*- 
+warmup: 0     # set 0 to turn off warmup
+hpo_tune: False
+
+optimizer:
+  name: Adam
+  kwargs:
+    lr: 1.0e-3
+    weight_decay: 1.0e-6
+
+lr_scheduler:
+  name: StepLR
+  kwargs:
+    gamma: 1.0
+    step_size: 1e3

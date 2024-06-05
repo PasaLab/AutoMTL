@@ -1,0 +1,11 @@
+joblib==1.3.2
+loguru==0.7.2
+nni==3.0
+numpy==1.23.5
+numpy==1.24.4
+pandas==1.5.3
+PyYAML==5.4.1
+PyYAML==6.0.1
+scikit_learn==1.0.2
+torch==2.1.2
+tqdm==4.66.1

@@ -1,0 +1,90 @@
+# -*- Data Configs -*- 
+dataset: UserBehavior
+dataset_path: /data/datasets/UserBehavior/
+dataset_ext: csv
+dense_fields: []
+sparse_fields: ["user_id:token", "item_id:token", "category:token"]
+label_fields: ["click:label", "buy:label", "cart:label", "favourite:label"]
+task_types:
+  ["classification", "classification", "classification", "classification"]
+num_workers: 8
+
+# -*- Result Configs -*- 
+result_path: ./results      # contains log, ckpt, config.yaml files
+save_interval: 300          # model save interval (per epoch)
+log_name: ~                 # if not ~: use for log file's name
+tag: ~                      # mark a log (append to log name)
+log_level: info
+log_interval: 100           # log print interval (per batch)
+log_parameter: False        # save the parameter as histogram or not
+
+# -*- Device Configs -*-
+device_ids: 0
+n_gpu: 1
+seed: 666
+deterministic: True
+hpo_tune: False
+
+# -*- Model Configs -*- 
+resume: False
+resume_path: ~
+clip_grad_norm: 5.0
+val_per_epoch: 1
+batch_size: 1024
+
+earlystop_patience: 10
+# abstract params
+embedding_dim: 64
+criterions: [bce, bce, bce, bce]
+val_metrics: [auc, auc, auc, auc]
+
+model:
+  name: SuperNet
+  kwargs:
+    dropout: 0.2
+    tower_layers: [64]
+    # search space
+    n_expert_layers: 2
+    n_experts: 4
+    expert_module:
+      in_features: 64
+      out_features: 64
+      n_layers: 3
+      ops:
+        [
+          "Identity",
+          "MLP-16",
+          "MLP-32",
+          "MLP-64",
+          "MLP-128",
+          "MLP-256",
+          "MLP-512",
+          "MLP-1024",
+        ]
+
+epoch: 2
+warmup_epochs: 2
+full_arch_train_epochs: 3
+fine_tune_epochs: 5
+discretize_ops: 10
+test_epoch: 2
+
+no_decay_keys: bn
+optimizer:
+  name: Adam
+  kwargs:
+    lr: 1.0e-3
+    weight_decay: 1.0e-5
+  
+arch_optimizer:
+  name: Adam
+  kwargs:
+    lr: 1.0e-3
+    weight_decay: 1.0e-6
+
+warmup: 0     # set 0 to turn off warmup
+lr_scheduler:
+  name: StepLR
+  kwargs:
+    gamma: 1.0
+    step_size: 1e3  # disable
