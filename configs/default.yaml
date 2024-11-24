@@ -1,6 +1,6 @@
 # -*- Data Configs -*- 
 dataset: UserBehavior
-dataset_path: /data/datasets/UserBehavior/
+dataset_path: ./data/datasets/UserBehavior/
 dataset_ext: csv
 dense_fields: []
 sparse_fields: ["user_id:token", "item_id:token", "category:token"]

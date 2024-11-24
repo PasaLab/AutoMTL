@@ -57,7 +57,7 @@ def main():
     """
     console_params > run_trainer.py dict > user defined yaml > default.yaml
     """
-    config = Config("./configs/default_nas.yaml", VAR_DICT).get_config_dict()
+    config = Config(r"D:\Shilong\new_murmur\01_code\AutoMTL\configs\default_nas.yaml", VAR_DICT).get_config_dict()
     if "dataset_name" in config:    # config dataset via console args 'dataset_name'
         config["dataset"]       = DATASET_COLLECTION[config["dataset_name"]]["dataset"]
         config["dataset_path"]  = DATASET_COLLECTION[config["dataset_name"]]["dataset_path"]
@@ -101,7 +101,7 @@ DATASET_COLLECTION = {
     },
     "ijcai15": {
         "dataset"       : "ijcai15",
-        "dataset_path"  : "/data/datasets/ijcai15/",       # data/datasets/ijcai15
+        "dataset_path"  : r"D:\Shilong\new_murmur\01_code\AutoMTL\data\datasets\ijcai15",       # data/datasets/ijcai15
         "dataset_ext"   : "csv",
         "dense_fields"  : [],
         "sparse_fields" : ["user_id:token", "item_id:token", "cat_id:token", "seller_id:token", "brand_id:token", "age_range:token", "gender:token"],

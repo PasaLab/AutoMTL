@@ -30,7 +30,7 @@ class SparseFeature:
 
     def get_embedding_layer(self):
         if not hasattr(self, "embed"):
-            self.embed = torch.nn.Embedding(self.vocab_size, self.embed_dim)
+            self.embed = torch.nn.Embedding(int(self.vocab_size), self.embed_dim)
         return self.embed
 
 

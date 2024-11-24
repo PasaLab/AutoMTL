@@ -324,7 +324,7 @@ class SuperNet(BasicNetwork):
             elif isinstance(module, MixedExpert):
                 module.export_arch(arch_config[name])
 
-
+    # todo 打印当前网络性能
     def print_arch(self, epoch_idx):
         print(f"Epoch-({epoch_idx}): " + "-" * 30 + f"Current Architecture" + "-" * 30)
         for i, m in enumerate(self.feature_modules):

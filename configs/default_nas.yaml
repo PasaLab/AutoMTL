@@ -1,16 +1,16 @@
 # -*- Data Configs -*- 
-dataset: UserBehavior
-dataset_path: /data/datasets/UserBehavior/
+dataset: ijcai15
+dataset_path: ./data/datasets/ijcai15/
 dataset_ext: csv
 dense_fields: []
 sparse_fields: ["user_id:token", "item_id:token", "category:token"]
 label_fields: ["click:label", "buy:label", "cart:label", "favourite:label"]
 task_types:
   ["classification", "classification", "classification", "classification"]
-num_workers: 8
+num_workers: 4
 
 # -*- Result Configs -*- 
-result_path: ./results      # contains log, ckpt, config.yaml files
+result_path: D:\Shilong\new_murmur\01_code\AutoMTL\results      # contains log, ckpt, config.yaml files
 save_interval: 300          # model save interval (per epoch)
 log_name: ~                 # if not ~: use for log file's name
 tag: ~                      # mark a log (append to log name)
@@ -21,7 +21,7 @@ log_parameter: False        # save the parameter as histogram or not
 # -*- Device Configs -*-
 device_ids: 0
 n_gpu: 1
-seed: 666
+seed: 123
 deterministic: True
 hpo_tune: False
 

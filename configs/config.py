@@ -105,11 +105,11 @@ class Config(object):
         """
         parser = argparse.ArgumentParser()
         parser.add_argument("--model_name", type=str, help="model name")
-        parser.add_argument("--dataset_name", type=str, help="dataset name")
+        parser.add_argument("--dataset_name", type=str,default="ijcai15", help="dataset name")
         parser.add_argument("--hpo_tune", type=bool, default=False, help="hpo tune")
         
         parser.add_argument("--batch_size", type=int, help="batch_size")
-        parser.add_argument("--dataset_path", help="dataset path")
+        parser.add_argument("--dataset_path",default= "data/datasets/ijcai15/",help="dataset path")
         parser.add_argument("-aug", "--augment", type=bool, help="use augment or not")
         parser.add_argument("-epoch", type=int, help="epoch num")
         parser.add_argument("--result_path", help="result path")
