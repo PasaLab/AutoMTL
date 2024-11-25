@@ -89,9 +89,7 @@ class MixFeature(BasicUnit):
     def export_arch(self, single_beta=None, inter_beta=None):
         def _forward(self, embs, dense_fea):
             single_feature = self.single_beta.view(1, self.n_fields, 1) * embs
-            inter_feature = self.interaction_layer(
-                self.inter_beta.view(1, self.n_fields, 1) * embs
-            )
+            inter_feature = self.interaction_layer(self.inter_beta.view(1, self.n_fields, 1) * embs)
 
             single_feature = single_feature.view(single_feature.size(0), -1)
 

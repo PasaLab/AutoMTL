@@ -318,7 +318,7 @@ class ArchSearchRunManager:
         torch.cuda.set_device(self.rank)
         return device, list_ids   
     
-    
+    # Todo 初始化网络结构
     def _init_model(self, config):
         net = SuperNet(
             features=self.features,

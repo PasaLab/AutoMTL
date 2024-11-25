@@ -9,18 +9,18 @@ from src.models.nas import BasicNetwork, ExpertModule, MixedExpert, MixFeature, 
 
 class SuperNet(BasicNetwork):
     def __init__(
-        self,
-        features,
-        embedding_dim,
-        task_types,
-        n_experts,
-        n_expert_layers,
-        n_layers,
-        in_features,
-        out_features,
-        tower_layers,
-        dropout,
-        expert_candidate_ops,
+            self,
+            features,
+            embedding_dim,
+            task_types,
+            n_experts,
+            n_expert_layers,
+            n_layers,
+            in_features,
+            out_features,
+            tower_layers,
+            dropout,
+            expert_candidate_ops,
     ):
         """
         Args:
@@ -51,24 +51,26 @@ class SuperNet(BasicNetwork):
         self.n_tasks = len(task_types)
 
         self.input_dim = (
-            self.embedding_dim * (self.n_feilds + 1) + self.embedding.n_dense
+                self.embedding_dim * (self.n_feilds + 1) + self.embedding.n_dense
         )
 
         self.n_experts = n_experts
         self.n_expert_layers = n_expert_layers
 
         self.interaction_layer = FM()  # [bs, nfields, emb] -> [bs, emb]
+        # TODO 𝑭𝒆𝒂𝒕𝒖𝒓𝒆 𝒔𝒆𝒍𝒆𝒄𝒕𝒊𝒐𝒏 𝒎𝒐𝒅𝒖𝒍𝒆
         self.feature_modules = nn.ModuleList(
             [
                 MixFeature(self.n_feilds, self.interaction_layer)
                 for _ in range(self.n_experts)
             ]
-        )   # add another MixFeature for gating network
+        )  # add another MixFeature for gating network
 
         # multi-layer experts
         expert_input_dims = [self.input_dim] + [out_features] * (
-            self.n_expert_layers - 1
+                self.n_expert_layers - 1
         )  # input dimensions of mix of experts layers
+        # TODO 𝑴𝒙𝒕𝒖𝒓𝒆 𝒐𝒇 𝑶𝒑𝒆𝒓𝒂𝒕𝒊𝒐𝒐𝒏𝒔 𝒇𝒐𝒓 𝑬𝒙𝒑𝒆𝒓𝒕𝑴𝒐𝒅𝒖𝒍𝒆
         self.experts = nn.ModuleList(
             [
                 nn.ModuleList(
@@ -88,16 +90,17 @@ class SuperNet(BasicNetwork):
             ]
         )
 
-        # set mixed expert module parameters
+        # set mixed expert module parameter
         # The gating network was putted outside the Mixed Expert module
+        # TODO 𝑴𝒊𝒙𝒕𝒖𝒓 𝒐𝒇 𝑬𝒙𝒑𝒆𝒓𝒕�
         self.mixed_experts = nn.ModuleList(
             nn.ModuleList(
                 [
                     MixedExpert(self.input_dim, n_choices=self.n_experts)
                     for _ in range(
-                        self.n_experts if i < self.n_expert_layers - 1
-                        else self.n_tasks
-                    )
+                    self.n_experts if i < self.n_expert_layers - 1
+                    else self.n_tasks
+                )
                 ]
             )
             for i in range(self.n_expert_layers)
@@ -115,26 +118,22 @@ class SuperNet(BasicNetwork):
         )
 
     def forward(self, x):
-        embs, dense_fea = self.embedding(
-            x, self.features, squeeze_dim=False
-        )  # [B, N, E], [B, n_dense_fields]
-        mix_features = [
-            feature_module(embs, dense_fea) for feature_module in self.feature_modules
-        ]
+        embs, dense_fea = self.embedding(x, self.features, squeeze_dim=False)  # [B, N, E], [B, n_dense_fields]
+        mix_features = [feature_module(embs, dense_fea) for feature_module in self.feature_modules]
         mix_features.append(
-            nn.functional.pad(embs.view(embs.size(0), -1), (0, self.embedding_dim + self.embedding.n_dense))
-        )       # raw feature input for gate
-        
+            nn.functional.pad(embs.view(embs.size(0), -1),
+                              (0, self.embedding_dim + self.embedding.n_dense)))  # raw feature input for gate
+
         temp = []
         for i in range(self.n_expert_layers - 1):
             for j in range(self.n_experts):
-                mix_features[j] = self.experts[i][j](mix_features[j])   # len(mix_features) = n+1
+                mix_features[j] = self.experts[i][j](mix_features[j])  # len(mix_features) = n+1
             for j in range(self.n_experts):
-                temp.append(self.mixed_experts[i][j](mix_features))     # len(temp) = n+1
+                temp.append(self.mixed_experts[i][j](mix_features))  # len(temp) = n+1
             temp.append(mix_features[-1])
             mix_features = temp
             temp = []
-            
+
         for j in range(self.n_experts):
             mix_features[j] = self.experts[-1][j](mix_features[j])
         for i in range(self.n_tasks):
@@ -211,7 +210,7 @@ class SuperNet(BasicNetwork):
             module_list = []
             for m in self.modules():
                 if m.__str__().startswith("MixedFeature") or m.__str__().startswith(
-                    "MixedExpert"
+                        "MixedExpert"
                 ):
                     module_list.append(m)
             self._redundant_modules = module_list

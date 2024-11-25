@@ -14,14 +14,14 @@ from src.trainer.searcher import ArchSearchRunManager
 
 VAR_DICT = {
     # "dataset_name": "UserBehavior",
-    # "dataset_name": "ijcai15",
-    "dataset_name": "KuaiRand",
+    "dataset_name": "ijcai15",
+    # "dataset_name": "KuaiRand",
     # "dataset_name": "QB-Video",
     # "dataset_name": "Ali-CCP",
-    "num_workers": 8,
+    "num_workers": 4,
     "earlystop_patience": 3,
     "device_ids": 0,
-    "batch_size": 2048,
+    "batch_size": 128,
     
     "epoch": 15, 
     "warmup_epochs": 2,
@@ -41,10 +41,10 @@ VAR_DICT = {
             "expert_module": {
                 "in_features": 64,
                 "out_features": 64,
-                "n_layers": 3,
+                "n_layers": 2,
                 "ops": [
                     "Identity", "MLP-16", "MLP-32", "MLP-64",
-                    "MLP-128", "MLP-256", "MLP-512", "MLP-1024",
+                    # "MLP-128", "MLP-256", "MLP-512", "MLP-1024",
                 ]
             }
         }
